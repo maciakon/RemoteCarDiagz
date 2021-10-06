@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\RemoteCarDiagz.Client.csproj" />
     <ProjectReference Include="..\Shared\RemoteCarDiagz.Shared.csproj" />
   </ItemGroup>
 
