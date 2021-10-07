@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using Prometheus.HttpClientMetrics;
+using Prometheus;
 
 namespace RemoteCarDiagz.Server
 {
@@ -45,9 +47,9 @@ namespace RemoteCarDiagz.Server
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
-
+            app.UseMetricServer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
