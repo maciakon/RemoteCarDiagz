@@ -1,6 +1,21 @@
 version: "3.9"
+configs:
+  prometheus_config:
+    file: .Server/prometheus.yml
+
 services:
   server:
     build: ./Server
     ports:
       - "5001:5001"
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    configs:
+      - source: prometheus_config
+    volumes:
+      - ./Server/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - server
