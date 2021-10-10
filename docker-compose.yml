@@ -29,3 +29,12 @@ services:
       - ./Server/Grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
     depends_on:
       - prometheus
+
+  client:
+      build:
+        context: .
+        dockerfile: Client/Dockerfile
+      ports:
+        - "8080:80"
+      depends_on:
+      - server
