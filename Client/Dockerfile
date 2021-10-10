@@ -20,5 +20,5 @@ RUN dotnet publish "Client/RemoteCarDiagz.Client.csproj" -c Release -o /app/publ
 
 FROM nginx:stable AS final
 WORKDIR /usr/share/nginx/html
-COPY --from=publish /app/publish .
+COPY --from=publish /app/publish/wwwroot .
 COPY Client/Nginx/nginx.conf /etc/nginx/nginx.conf
