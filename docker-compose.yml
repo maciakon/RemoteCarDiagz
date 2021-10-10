@@ -19,3 +19,13 @@ services:
       - ./Server/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - server
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Server/Grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./Server/Grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+    depends_on:
+      - prometheus
