@@ -12,7 +12,7 @@ services:
           cpus: '0.5'
 
   prometheus:
-    image: prom/prometheus:latest
+    image: vagacr.azurecr.io/vag-prometheus
     build: ./Server/Prometheus
     ports:
       - "9090:9090"
@@ -24,7 +24,7 @@ services:
           cpus: '0.5'
   
   grafana:
-    image: grafana/grafana:latest
+    image: vagacr.azurecr.io/vag-grafana
     ports:
       - "3000:3000"
     depends_on:
