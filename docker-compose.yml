@@ -5,6 +5,7 @@ configs:
 
 services:
   server:
+    image: vagacr.azurecr.io/vag-server
     build: ./Server
     ports:
       - "5001:5001"
@@ -31,6 +32,7 @@ services:
       - prometheus
 
   client:
+      image: vagacr.azurecr.io/vag-front
       build:
         context: .
         dockerfile: Client/Dockerfile
