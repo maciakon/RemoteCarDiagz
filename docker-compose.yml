@@ -25,6 +25,7 @@ services:
   
   grafana:
     image: vagacr.azurecr.io/vag-grafana
+    build: ./Server/Grafana
     ports:
       - "3000:3000"
     depends_on:
