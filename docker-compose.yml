@@ -1,7 +1,4 @@
 version: "3.9"
-configs:
-  prometheus_config:
-    file: .Server/prometheus.yml
 
 services:
   server:
@@ -9,34 +6,44 @@ services:
     build: ./Server
     ports:
       - "5001:5001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
 
   prometheus:
     image: prom/prometheus:latest
+    build: ./Server/Prometheus
     ports:
       - "9090:9090"
-    configs:
-      - source: prometheus_config
-    volumes:
-      - ./Server/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
   
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
-    volumes:
-      - ./Server/Grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./Server/Grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
     depends_on:
       - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
 
   client:
-      image: vagacr.azurecr.io/vag-front
-      build:
-        context: .
-        dockerfile: Client/Dockerfile
-      ports:
-        - "8080:80"
-      depends_on:
-      - server
+    image: vagacr.azurecr.io/vag-front
+    build:
+      context: .
+      dockerfile: Client/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+    - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
