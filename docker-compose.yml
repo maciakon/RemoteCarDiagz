@@ -3,7 +3,9 @@ version: "3.9"
 services:
   server:
     image: vagacr.azurecr.io/vag-server
-    build: ./Server
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
     ports:
       - "5001:5001"
     deploy:
