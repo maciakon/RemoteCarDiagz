@@ -23,8 +23,7 @@ namespace RemoteCarDiagz.Server.Controllers
         public IActionResult Upload([FromBody] SendMeaurementsRequest request)
         {
             var locationUri = HttpContext.Request.GetDisplayUrl();
-
-            // _measurementsService.SetMeasurement(value);
+            _measurementsService.ProcessMeasurement(request);
             return Created(locationUri, Ok());
         }
     }

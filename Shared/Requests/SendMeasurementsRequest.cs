@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace RemoteCarDiagz.Shared.Requests
 {
     public class SendMeaurementsRequest

@@ -1,25 +1,26 @@
-using Prometheus;
+using RemoteCarDiagz.Server.Services.PidServices;
 using RemoteCarDiagz.Shared.Requests;
-using RemoteCarDiagz.Shared.Domain;
 
 namespace RemoteCarDiagz.Server.Services
 {
     public interface IMeasurementService
     {
-        void SetMeasurement(byte value);
+        void ProcessMeasurement(SendMeaurementsRequest request);
     }
 
     public class MeasurementService : IMeasurementService
     {
-        private static readonly Gauge Rpm = Metrics.CreateGauge("RPM", "Number of jobs waiting for processing in the queue.");
-        public void SetMeasurement(byte value)
+        private readonly IMeasurementHandler _firstHandler = new EngineRpmHandler();
+
+        public MeasurementService()
         {
-            Rpm.Set(value);
+            var coolantTemperatureHandler = new CoolantTemperatureHandler();
+            _firstHandler.SetNext(coolantTemperatureHandler);
         }
 
         public void ProcessMeasurement(SendMeaurementsRequest request)
         {
-            
+            _firstHandler.Handle(request);
         }
     }
 }
