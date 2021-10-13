@@ -1,4 +1,6 @@
 using Prometheus;
+using RemoteCarDiagz.Shared.Requests;
+using RemoteCarDiagz.Shared.Domain;
 
 namespace RemoteCarDiagz.Server.Services
 {
@@ -13,6 +15,11 @@ namespace RemoteCarDiagz.Server.Services
         public void SetMeasurement(byte value)
         {
             Rpm.Set(value);
+        }
+
+        public void ProcessMeasurement(SendMeaurementsRequest request)
+        {
+            
         }
     }
 }

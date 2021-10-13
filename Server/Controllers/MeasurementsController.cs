@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RemoteCarDiagz.Server.Services;
+using RemoteCarDiagz.Shared.Requests;
 
 namespace RemoteCarDiagz.Server.Controllers
 {
@@ -19,10 +20,11 @@ namespace RemoteCarDiagz.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upload([FromBody] byte value)
+        public IActionResult Upload([FromBody] SendMeaurementsRequest request)
         {
             var locationUri = HttpContext.Request.GetDisplayUrl();
-            _measurementsService.SetMeasurement(value);
+
+            // _measurementsService.SetMeasurement(value);
             return Created(locationUri, Ok());
         }
     }
