@@ -6,7 +6,7 @@ namespace RemoteCarDiagz.Server.Services.PidServices
 {
     public class CoolantTemperatureHandler : MeasurementHandler
     {
-        private static readonly Gauge _coolantTemp = Metrics.CreateGauge(nameof(PidIds.PID_COOLANT_TEMP), "COOLANT_TEMP");
+        private static readonly Gauge _coolantTemp = Metrics.CreateGauge(nameof(PidIds.PID_COOLANT_TEMP), "Coolant temperature [C]");
 
         public override void Handle(SendMeaurementsRequest request)
         {
