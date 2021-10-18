@@ -21,6 +21,10 @@ namespace RemoteCarDiagz.Server
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureServices(
-                    (_, services) => services.AddScoped<IMeasurementService, MeasurementService>());
+                    (_, services) => 
+                    services
+                    .AddScoped<IMeasurementService, MeasurementService>()
+                    .AddScoped<IConfigurationService, ConfigurationService>()
+                    );
     }
 }
