@@ -56,6 +56,5 @@ namespace RemoteCarDiagz.Server.Services
 
             return await _dbContext.SaveChangesAsync() > 0;
         }
-
     }
 }
