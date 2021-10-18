@@ -21,6 +21,12 @@ namespace RemoteCarDiagz.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddDefaultPolicy(
+                builder => 
+                            builder
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin()));
 
             services.AddDbContext<RemoteCarDiagzContext>();
             services.AddControllersWithViews();
@@ -47,6 +53,7 @@ namespace RemoteCarDiagz.Server
             app.UseStaticFiles();
             
             app.UseRouting();
+            app.UseCors();
             app.UseMetricServer();
             app.UseEndpoints(endpoints =>
             {
