@@ -3,9 +3,9 @@
 @using RemoteCarDiagz.Shared.Domain
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
+<h1>Active PIDs</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>Active PIDs retrieved from server</p>
 
 @if (activeMeasurements == null)
 {
@@ -17,13 +17,15 @@ else
         <thead>
             <tr>
                 <th>Value</th>
+                <th>IsActive</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var measurement in activeMeasurements)
             {
                 <tr>
-                    <td>@measurement</td>
+                    <td>@measurement.Value</td>
+                    <td>@measurement.IsActive</td>
                 </tr>
             }
         </tbody>
@@ -31,10 +33,10 @@ else
 }
 
 @code {
-    private List<PidIdsEnum> activeMeasurements;
+    private List<Measurement> activeMeasurements;
 
     protected override async Task OnInitializedAsync()
     {
-        var activeMeasurements = await Http.GetFromJsonAsync<List<PidIdsEnum>>("configuration");
+        activeMeasurements = await Http.GetFromJsonAsync<List<Measurement>>("configuration");
     }
 }

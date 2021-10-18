@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RemoteCarDiagz.Server.Data;
+using RemoteCarDiagz.Shared.Domain;
 using RemoteCarDiagz.Shared.Requests;
 
 namespace RemoteCarDiagz.Server.Services
