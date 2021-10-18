@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
+using RemoteCarDiagz.Server.Data;
 
 namespace RemoteCarDiagz.Server
 {
@@ -21,6 +22,7 @@ namespace RemoteCarDiagz.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<RemoteCarDiagzContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
