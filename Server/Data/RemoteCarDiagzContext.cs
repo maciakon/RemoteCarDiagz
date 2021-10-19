@@ -22,7 +22,7 @@ namespace RemoteCarDiagz.Server.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            var allPidValues = Enum.GetValues<PidIdsEnum>().Select(x => new Measurement() { Value = x });
+            var allPidValues = Enum.GetValues<PidIdsEnum>().Select(x => new Measurement() { Value = x, IsAvailable = true });
             builder.Entity<Measurement>().HasData(allPidValues);
             base.OnModelCreating(builder);
         }

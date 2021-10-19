@@ -9,5 +9,6 @@ namespace RemoteCarDiagz.Shared.Domain
         [Key]
         public PidIdsEnum Value { get; set; }
         public bool IsActive { get; set; }
+        public bool IsAvailable  { get; set; }
     }
 }

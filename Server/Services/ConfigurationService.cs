@@ -12,7 +12,7 @@ namespace RemoteCarDiagz.Server.Services
 {
     public interface IConfigurationService
     {
-        Task<List<Measurement>> GetActiveMeasurements();
+        Task<List<Measurement>> GetAvailableMeasurements();
         Task<bool> SetActiveMeasurements(SetActiveMeasurementsRequest request);
     }
 
@@ -27,11 +27,11 @@ namespace RemoteCarDiagz.Server.Services
             _logger = logger;
         }
 
-        public async Task<List<Measurement>> GetActiveMeasurements()
+        public async Task<List<Measurement>> GetAvailableMeasurements()
         {
             try
             {
-                return await _dbContext.Measurements.Where(x => x.IsActive == true).ToListAsync();
+                return await _dbContext.Measurements.Where(x => x.IsAvailable).ToListAsync();
             }
             catch (Exception e)
             {

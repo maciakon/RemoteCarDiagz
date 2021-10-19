@@ -19,7 +19,7 @@ namespace RemoteCarDiagz.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetActiveMeasurements()
         {
-            var activeMeasurements = await _configurationService.GetActiveMeasurements();
+            var activeMeasurements = await _configurationService.GetAvailableMeasurements();
             return Ok(activeMeasurements);
         }
 
