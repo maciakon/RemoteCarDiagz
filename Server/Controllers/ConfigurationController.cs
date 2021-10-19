@@ -24,13 +24,13 @@ namespace RemoteCarDiagz.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SetActiveMeasurements([FromBody] SetActiveMeasurementsRequest request)
+        public async Task<IActionResult> SetActiveMeasurement([FromBody] ToggleActivateMeasurementRequest request)
         {
-            if(await _configurationService.SetActiveMeasurements(request))
+            if(await _configurationService.ToggleMeasurementActive(request))
             {
                 return Ok();
             }
-            return NotFound(request.PidIds);
+            return NotFound(request.Pid);
         }
     }
 }

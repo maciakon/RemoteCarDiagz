@@ -13,7 +13,7 @@ namespace RemoteCarDiagz.Server.Services
     public interface IConfigurationService
     {
         Task<List<Measurement>> GetAvailableMeasurements();
-        Task<bool> SetActiveMeasurements(SetActiveMeasurementsRequest request);
+        Task<bool> ToggleMeasurementActive(ToggleActivateMeasurementRequest requestPid);
     }
 
     public class ConfigurationService : IConfigurationService
@@ -40,21 +40,15 @@ namespace RemoteCarDiagz.Server.Services
             }
         }
 
-        public async Task<bool> SetActiveMeasurements(SetActiveMeasurementsRequest request)
+        public async Task<bool> ToggleMeasurementActive(ToggleActivateMeasurementRequest toggleActivationRequest)
         {
-            _logger.LogInformation($"Setting active measurements: {request.PidIds.ToString()}");
-            _dbContext.Database.ExecuteSqlRaw("UPDATE [Measurements] SET [IsActive] = false");
-            foreach (var pid in request.PidIds)
+            _logger.LogInformation($"Toggle measurement: {toggleActivationRequest.Pid}, active: {toggleActivationRequest.IsActive}");
+
+            var entry = await _dbContext.Measurements.FirstOrDefaultAsync(x => x.Value == toggleActivationRequest.Pid);
+            if(entry != null)
             {
-                var entry = await _dbContext.Measurements.FirstOrDefaultAsync(x => x.Value == pid);
-                if(entry != null)
-                {
-                    entry.IsActive = true;
-                }
-                else return false;
-
+                entry.IsActive = toggleActivationRequest.IsActive;
             }
-
             return await _dbContext.SaveChangesAsync() > 0;
         }
     }

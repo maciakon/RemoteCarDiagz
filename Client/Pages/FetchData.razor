@@ -1,6 +1,7 @@
 ﻿@page "/fetchdata"
 @using System.Collections.Generic
 @using RemoteCarDiagz.Shared.Domain
+@using RemoteCarDiagz.Shared.Requests
 @inject HttpClient Http
 
 <h1>Active PIDs</h1>
@@ -17,7 +18,7 @@ else
         <thead>
             <tr>
                 <th>Value</th>
-                <th>IsActive</th>
+                <th>Active</th>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +26,9 @@ else
             {
                 <tr>
                     <td>@measurement.Value</td>
-                    <td>@measurement.IsActive</td>
+                    <td>
+                        <button type="button" class="@GetButtonState(measurement.IsActive)" @onclick="() => TogggleMeasurementActive(measurement)">@GetButtonText(measurement.IsActive)</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -35,6 +38,22 @@ else
 @code {
     private List<Measurement> activeMeasurements;
 
+    private string GetButtonState(bool isActive)
+    {
+        return isActive ? "btn btn-danger" : "btn btn-success";
+    }
+    private string GetButtonText(bool isActive)
+    {
+        return isActive ? "Deactivate" : "Activate";
+    }
+
+    private async Task TogggleMeasurementActive(Measurement measurement)
+    {
+        measurement.IsActive = !measurement.IsActive;
+        var toggleActivationRequest = new ToggleActivateMeasurementRequest { Pid = measurement.Value, IsActive = measurement.IsActive  };
+        var response = await Http.PostAsJsonAsync<ToggleActivateMeasurementRequest>("configuration", toggleActivationRequest);
+    }
+    
     protected override async Task OnInitializedAsync()
     {
         activeMeasurements = await Http.GetFromJsonAsync<List<Measurement>>("configuration");
