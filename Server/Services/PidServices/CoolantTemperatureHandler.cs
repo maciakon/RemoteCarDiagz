@@ -17,7 +17,7 @@ namespace RemoteCarDiagz.Server.Services.PidServices
 
         public override void Handle(SendMeaurementsRequest request)
         {
-            if(request.A == PidIds.PID_COOLANT_TEMP)
+            if(request.PIDCode == PidIds.PID_COOLANT_TEMP)
             {
                 _logger.LogInformation("CoolantTemperature handler");
                 var coolantTemp = request.A - 40;
