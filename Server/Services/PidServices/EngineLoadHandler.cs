@@ -16,7 +16,7 @@ namespace RemoteCarDiagz.Server.Services.PidServices
 
         public override void Handle(SendMeaurementsRequest request)
         {
-            if(request.PIDCode == PidIds.PID_ABSOLUTE_ENGINE_LOAD)
+            if(request.PIDCode == PidIds.PID_ENGINE_LOAD)
             {
                 _logger.LogInformation("EngineLoad handler");
                 var engineLoad = (100 * request.A) / 255;

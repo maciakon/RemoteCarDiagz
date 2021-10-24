@@ -32,7 +32,7 @@ namespace RemoteCarDiagz.Shared.Domain
         // PID_CATALYST_TEMP_B1S2 = 0x3E,
         // PID_CATALYST_TEMP_B2S2 = 0x3F,
         // PID_CONTROL_MODULE_VOLTAGE = 0x42,
-        PID_ABSOLUTE_ENGINE_LOAD = 0x43,
+        // PID_ABSOLUTE_ENGINE_LOAD = 0x43,
         // PID_AIR_FUEL_EQUIV_RATIO = 0x44,
         // PID_RELATIVE_THROTTLE_POS = 0x45,
         // PID_AMBIENT_TEMP = 0x46,
