@@ -1,5 +1,3 @@
-using RemoteCarDiagz.Shared.Domain;
-
 namespace RemoteCarDiagz.Shared.Requests
 {
     public class SendMeaurementsRequest
