@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[10pt,a4paper]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage{polski}
 \usepackage[polish]{babel}
@@ -13,8 +13,8 @@
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
 \restylefloat{table}
 \author{Konrad Maciałek}
-\title{Telemetria pojazdów mechanicznych\\
-\large Projekt Zespołowy}
+\title{Telemetria pojazdów mechanicznych}
+\subtitle{Projekt Zespołowy}
 \lstset{
 	string=[s]{"}{"},
 	stringstyle=\color{blue},
@@ -27,7 +27,7 @@
 	\newpage
 	\pagenumbering{arabic}
 	\section{Zadanie projektowe}
-	Zaprojektowanie rozwiązania, służącego do zdalnej diagnostyki pojazdów mechanicznych. Powstałe urządzenie wraz z aplikacją powinno umożliwiać analizę danych, odczytanych z podstawowych czujników wbudowanych we współczesne samochody.
+	Zaprojektowanie rozwiązania, służącego do zdalnej diagnostyki pojazdów samochodowych. Powstałe urządzenie wraz z aplikacją powinno umożliwiać analizę danych, odczytanych z podstawowych czujników wbudowanych we współczesne samochody.
 	\\
 	Dane powinny być dostępne poprzez stronę www.
 	\section{Opis projektu}
@@ -40,7 +40,7 @@
 		\end{figure}
 		Finałowy produkt składa się z dwóch głównych części: sprzętowej, odczytującej zadane dane oraz drugiej- aplikacji sieciowej, umożliwiającej podgląd i sterowanie danymi. 
 		\subsubsection{Odczyt danych (VagCan)}
-		Głównym elementem sterującym jest mikro-kontroler ESP8266. Działająca w nim aplikacja komunikuje się z systemami diagnostyki OBD pojazdu za pomocą protokołu CAN poprzez kontroler MCP2515. Pobrane informacje wysyła następnie poprzez sieć WiFi udostępnioną ze smartfona, do aplikacji sieciowej, gdzie są one zapisywane i udostępniane użytkownikowi końcowemu. 
+		Głównym elementem sterującym jest mikro-kontroler ESP8266. Działająca w nim aplikacja komunikuje się z systemami diagnostyki OBD pojazdu za pomocą protokołu CAN poprzez kontroler MCP2515. Pobrane informacje wysyła następnie poprzez sieć WiFi udostępnioną ze telefonu, do aplikacji sieciowej, gdzie są one zapisywane i udostępniane użytkownikowi końcowemu. 
 		\subsubsection{Aplikacja sieciowa (RemoteCarDiagz)}
 		Aplikacja sieciowa składa się z kilku komponentów: serwisu aplikacyjnego typu REST API, publikującego interfejs umożliwiający odczyt i zapis danych oraz aplikacji klienckiej z graficznym interfejsem użytkownika, pozwalającym na podgląd oraz manipulację danymi. Dodatkowo wykorzystano serwisy wspomagające, takie jak baza danych Prometheus, zoptymalizowana do zapisu i odczytu danych zaszeregowanych czasowo.
 		
@@ -77,7 +77,7 @@
 		\end{table}
 		
 		Na powyższym diagramie opisano tylko piny wykorzystane w projekcie, z czego najważniejszymi są 6 i 14. Są to piny umożliwiające komunikację poprzez protokół magistrali CAN (sformułowany w normach ISO 15765-4 i SAE J2284).\\
-		CAN to szeregowa magistrala komunikacyjna, mająca głównie zastosowanie w przemyśle samochodowym, powstała w latach 80. XX wieku. Wykorzystuje ona dwuprzewodową skrętkę, co pozwala uzyskać prędkość przesyłu na poziomie 1Mb/s przy dystansie do 40 metrów. Z uwagi na brak jednostki nadrzędnej, komunikacja ma charakter rozgłoszeniowy, tzn. komunikaty nadawane na magistralę, odbierane są przez wszystkie urządzenia do niej podpięte. W przypadku pojazdu samochodowego, urządzeniami używającymi tej magistrali są ECU, odpowiedzialne np. za działanie silnika lub systemów bezpieczeństwa, takich jak ABS.\\ \\ Najważniejsze cechy:
+		CAN to szeregowa magistrala komunikacyjna, mająca głównie zastosowanie w przemyśle samochodowym, powstała w latach 80. XX wieku. Wykorzystuje ona dwuprzewodową skrętkę, co pozwala uzyskać prędkość przesyłu na poziomie 1MB/s przy dystansie do 40 metrów. Z uwagi na brak jednostki nadrzędnej, komunikacja ma charakter rozgłoszeniowy, tzn. komunikaty nadawane na magistralę, odbierane są przez wszystkie urządzenia do niej podpięte. W przypadku pojazdu samochodowego, urządzeniami używającymi tej magistrali są ECU, odpowiedzialne np. za działanie silnika lub systemów bezpieczeństwa, takich jak ABS.\\ \\ Najważniejsze cechy:
 		\begin{itemize}
 			\item 8 bitów danych w komunikacie
 			\item rozpoznawanie komunikatów poprzez identyfikatory
@@ -149,7 +149,7 @@
 		\label{fig:schemat_układu}
 	\end{figure}
 
-	Na diagramie pokazany jest schemat ogólny układu. Głównym elementem jest mikrokrontroler ESP8266, w postaci gotowego modułu NodeMCU. Moduł ten za pomocą interfejsu SPI komunikuje się z kontrolerem CAN opartym na MCP2515, który z kolei poprzez niewidoczny na schemacie interfejs pośredniczący TJA1050 podłączony jest do magistrali CAN przez gniazdo OBD-II. Zasilanie całego układu realizowane jest przez stabilizator oparty na układzie LM7805, przekształcający napięcie +12V akumulatora na +5V akceptowalne przez obydwa podłączone równolegle moduły NodeMCU i MCP2515. Warto zauważyć, że napięcie pobierane jest z tego samego gniazda, na którym zrealizowana jest komunikacja.
+	Na diagramie pokazany jest schemat ogólny układu. Głównym elementem jest mikrokontroler ESP8266, w postaci gotowego modułu NodeMCU. Moduł ten za pomocą interfejsu SPI komunikuje się z kontrolerem CAN opartym na MCP2515, który z kolei poprzez niewidoczny na schemacie interfejs pośredniczący TJA1050 podłączony jest do magistrali CAN przez gniazdo OBD-II. Zasilanie całego układu realizowane jest przez stabilizator oparty na układzie LM7805, przekształcający napięcie +12V akumulatora na +5V akceptowalne przez obydwa podłączone równolegle moduły NodeMCU i MCP2515. Warto zauważyć, że napięcie pobierane jest z tego samego gniazda, na którym zrealizowana jest komunikacja.
 		\subsection{Stabilizator napięcia}
 		Występujące między pinami 16 i 4 gniazda OBD-II napięcie +12V pochodzi z akumulatora diagnozowanego samochodu. Z uwagi na to, że zarówno NodeMCU, jak i MCP251 nie tolerują tak wysokich wartości, zaistniała potrzeba wykonania stabilizatora napięcia. Zdecydowano się na implementację opartą o układ LM7805, z uwagi na prostotę, dostępność oraz cenę. Projekt oraz produkcja płytki drukowanej została wykonana w całości sposobem własnym. Do pracy wykorzystano środowisko EasyEDA, umożliwiające kompleksowe wspomaganie projektowania, od etapu schematu, do wydruku ścieżek transferowalnych na płytkę drukowaną.
 		\subsubsection{Schemat}
@@ -180,7 +180,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.7\linewidth]{wytrawione_ścieżki}
-			\caption[Wytrawione ścieżki stablizatora]{Wytrawione ścieżki stablizatora}
+			\caption[Wytrawione ścieżki stabilizatora]{Wytrawione ścieżki stabilizatora}
 			\label{fig:wytrawionesciezki}
 		\end{figure}
 		
@@ -237,7 +237,7 @@
 			\item obsługa połączenia WiFi
 		\end{itemize}
 		\subsubsection {Wykorzystane biblioteki}
-		Aplikakcja korzysta z kilku bibliotek:
+		Aplikacja korzysta z kilku bibliotek:
 		\begin{itemize}
 			\item MCPCAN.h autorstwa Cory J. Fowler - do obsługi protokołu CAN przez MCP2515
 			\item ESP8266WiFi.h - obsługa WiFi
@@ -265,7 +265,7 @@
 			\label{fig:mainloop}
 		\end{figure}
 		Warto od razu zauważyć wadę takiego rozwiązania. MCP2515 dysponuje dwoma buforami odczytu, działającymi równolegle. Zatem można przekształcić tak działanie programu, aby żądać, odczytywać i wysyłać do serwera dane pomiarowe parami, zamiast pojedynczo. Pozwoliłoby to na pewno bardziej efektywnie wykorzystać czas działania programu, a także zmniejszyć narzut opóźnienia związany ze zbyt częstym wysyłaniem danych przez protokół HTTP.\\
-		Kolejną rzucającą się w oczy wadą, jest wpisany w kod programu adres serwera, a także hasło i SSID sieci WiFi. W prototypowym rozwiązaniu jest to dopuszczalne, w przypadku wersji produkcyjnej należy ten problem rozwiązać inaczej- dobrym pomysłem wydaje się dodanie obsługi komunikacji Bluetooth i przesyłanie tych danych w momencie konfiguracji aplikacji poprzez sparowany z mikrokontrolerem smartfon. Ciekawym rozwinięciem projektu byłoby dodanie wyświetlacza, lub zestawu LEDów informujących o statusie urządzenia.
+		Kolejną rzucającą się w oczy wadą, jest wpisany w kod programu adres serwera, a także hasło i SSID sieci WiFi. W prototypowym rozwiązaniu jest to dopuszczalne, w przypadku wersji produkcyjnej należy ten problem rozwiązać inaczej- dobrym pomysłem wydaje się dodanie obsługi komunikacji Bluetooth i przesyłanie tych danych w momencie konfiguracji aplikacji poprzez sparowany z mikrokontrolerem telefon. Ciekawym rozwinięciem projektu byłoby dodanie wyświetlacza, lub zestawu LEDów informujących o statusie urządzenia.
 		
 		\subsection{RemoteCarDiagz}
 		Rozwiązanie działające po stronie sieciowej, składa się z kilku serwisów:
@@ -346,10 +346,10 @@
 		Wizualizacja danych pomiarowych zrealizowana została przy pomocy systemu wspomagającego Grafana. Jest to system szeroko używany w aplikacjach sieciowych, służący do obrazowania danych uszeregowanych czasowo. Użytkownik końcowy ma możliwość wglądu zarówno w chwilowe wartości danych diagnostycznych, jak i przeglądanie ich w wymiarze czasowym, w postaci wykresów. Interfejs umożliwia operacje związane z analizą danych (np. obliczanie średniej lub maksymalnej wartości w czasie) a także operacje graficzne, m.in. powiększanie wykresu, czy wybór przedziału czasowego analizy danych. Źródłem danych jest Prometheus, odpytywany periodycznie co 500 ms.
 		
 		\subsubsection{Hosting}
-		Każdy z wymienionych komponentów, tj. Client, Server, Grafana i Prometheus jest hostowany jako grupa kontenerów Docker w chmurze Azure. Ponieważ kontenery w grupie działają w jednej podsieci, niezwykle łatwo nawiązać między nimi łączność. Ponadto deployment całej grupy kontenrów jest bardzo prosty, sprowadza się do wykonania kilku poleceń w linii komend Azure (Azure CLI). Warto zauważyć, że aplikacja kliencka, jako statycznie kompilowana strona www, nie może być bezpośrednio hostowana z systemu Docker - dlatego dodatkowo wbudowano w kontener serwer Nginx w trybie reverse - proxy. Z uwagi na ograniczoną ilość środków do wykorzystania na platformie Azure przy subskrypcji studenckiej, nie zaimplementowano statycznego adresu IP, w związku z czym po każdym deploymencie adres ten jest inny. Rozwiązaniem tego problemu w środowisku produkcyjnym byłoby zastosowanie Azure Gateway, czyli bramy stojącej przed całą grupą kontenerów i odpowiednio przekierowującej ruch, a także zapewniającej pożądany, statyczny adres IP.
+		Każdy z wymienionych komponentów, tj. Client, Server, Grafana i Prometheus jest hostowany jako grupa kontenerów Docker w chmurze Azure. Ponieważ kontenery w grupie działają w jednej podsieci, niezwykle łatwo nawiązać między nimi łączność. Ponadto deployment całej grupy kontenerów jest bardzo prosty, sprowadza się do wykonania kilku poleceń w linii komend Azure (Azure CLI). Warto zauważyć, że aplikacja kliencka, jako statycznie kompilowana strona www, nie może być bezpośrednio hostowana z systemu Docker - dlatego dodatkowo wbudowano w kontener serwer Nginx w trybie reverse - proxy. Z uwagi na ograniczoną ilość środków do wykorzystania na platformie Azure przy subskrypcji studenckiej, nie zaimplementowano statycznego adresu IP, w związku z czym po każdym deploymencie adres ten jest inny. Rozwiązaniem tego problemu w środowisku produkcyjnym byłoby zastosowanie Azure Gateway, czyli bramy stojącej przed całą grupą kontenerów i odpowiednio przekierowującej ruch, a także zapewniającej pożądany, statyczny adres IP.
 		
 		\section{Praca zespołowa}
-		Niemożność znalezienia zespołu projektowego spowodowała, że zadanie zostało wykonane samodzielnie. Z uwagi jednak na cel przedmiotu, prace projektowe prowadzone jendak były tak, aby łatwo dały zaadaptować się do większej liczby uczestników projektu.
+		Niemożność znalezienia zespołu projektowego spowodowała, że zadanie zostało wykonane samodzielnie. Z uwagi jednak na cel przedmiotu, prace projektowe prowadzone jednak były tak, aby łatwo dały zaadaptować się do większej liczby uczestników projektu.
 		
 		\subsection{Metodologia}
 		Jako metodologię pracy przyjęto model Agile/Scrum. Okres pracy projektowej został podzielony na tygodniowe sprinty. Zadania zostały rozpisane na początku pracy (backlog) oraz został stworzony harmonogram. 
@@ -398,5 +398,6 @@
 		
 		\subsection{Zastosowanie biznesowe}
 		Zagadnienie telemetrii jest obecne coraz częściej w naszym życiu. Ilość pojazdów samochodowych zwiększa się rokrocznie, a zbieranie danych diagnostycznych z ich dużej liczby, może dostarczyć ciekawych danych producentom, warsztatom serwisowym, czy właścicielom flot. Koszty prototypu są stosunkowo niskie z powodu wykorzystanych popularnych komponentów, a przy zastosowaniu masowej produkcji stałyby się zapewne jeszcze dużo mniejsze.
-		
+		\pagebreak
+		\tableofcontents
 \end{document}
