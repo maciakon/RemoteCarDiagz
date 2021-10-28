@@ -38,7 +38,7 @@
 			\caption[Diagram ogólny]{Diagram ogólny}
 			\label{fig:remotecardiagz}
 		\end{figure}
-		Finałowy produkt składa się z dwóch głównych części: pierwszej, odczytującej zadane dane oraz drugiej- aplikacji sieciowej, umożliwiającej podgląd i sterowanie danymi. 
+		Finałowy produkt składa się z dwóch głównych części: sprzętowej, odczytującej zadane dane oraz drugiej- aplikacji sieciowej, umożliwiającej podgląd i sterowanie danymi. 
 		\subsubsection{Odczyt danych (VagCan)}
 		Głównym elementem sterującym jest mikro-kontroler ESP8266. Działająca w nim aplikacja komunikuje się z systemami diagnostyki OBD pojazdu za pomocą protokołu CAN poprzez kontroler MCP2515. Pobrane informacje wysyła następnie poprzez sieć WiFi udostępnioną ze smartfona, do aplikacji sieciowej, gdzie są one zapisywane i udostępniane użytkownikowi końcowemu. 
 		\subsubsection{Aplikacja sieciowa (RemoteCarDiagz)}
@@ -153,7 +153,7 @@
 		\subsection{Stabilizator napięcia}
 		Występujące między pinami 16 i 4 gniazda OBD-II napięcie +12V pochodzi z akumulatora diagnozowanego samochodu. Z uwagi na to, że zarówno NodeMCU, jak i MCP251 nie tolerują tak wysokich wartości, zaistniała potrzeba wykonania stabilizatora napięcia. Zdecydowano się na implementację opartą o układ LM7805, z uwagi na prostotę, dostępność oraz cenę. Projekt oraz produkcja płytki drukowanej została wykonana w całości sposobem własnym. Do pracy wykorzystano środowisko EasyEDA, umożliwiające kompleksowe wspomaganie projektowania, od etapu schematu, do wydruku ścieżek transferowalnych na płytkę drukowaną.
 		\subsubsection{Schemat}
-		Schemat, na którym oparto stabilizator opisany jest w nocie katalogowej LM7805. Uzupełniono go natomiast o złącza śrubowe celem łatwiejszego podłączania okablowania. Dioda 1N4007 zabezpiecza przed odwrotnym podłączeniem przewodów.
+		Schemat, na którym oparto stabilizator opisany jest w nocie katalogowej LM7805. Uzupełniono go natomiast o złącza śrubowe celem łatwiejszego podłączania okablowania. Dioda 1N4007 zabezpiecza przed odwrotnym podłączeniem biegunów źródła napięciowego.
 		\begin{figure}
 			\centering
 			\includegraphics[width=1.0\linewidth]{schemat_stabilizator}
@@ -285,7 +285,7 @@
 		Standardowe WEB API, upubliczniające dwa endpointy: /configuration i /measurements a także specjalny, wewnętrzny endpoint /metrics służący do pobierania danych pomiarowych przez aplikację Prometheus.
 		\paragraph{\slash configuration} korzysta z niego graficzny interfejs użytkownika (GUI) oraz VagCan. Metoda GET pozwala na pobranie aktualnie aktywnych PID do pomiaru (lub wyświetlenia na GUI), podczas gdy POST zapisuje aktywne PID do bazy danych SQLite.
 		\paragraph{\slash measurements} używany jest jedynie przez VagCan - metodą POST przesyłane są wartości pomiarowe, które po obliczeniach trafiają do bazy danych Prometheus
-		\subsection{Server - przykładowe obliczenia}
+		\subsubsection{Server - przykładowe obliczenia}
 		Poniżej pokazano przetwarzanie danych dla PID 0x05, czyli temperatury płynu chłodzącego.
 		Dane do serwera trafiają w postaci payloadu JSON:\\
 		\begin{lstlisting}
@@ -335,11 +335,68 @@
 			\end{tabular}
 		\end{table}
 	
-		Interfejs użytkownika pozwala na zmianę stanu danego identyfikatora. Stan aktywny oznacza, że identyfikator będzie cyklicznie wysyłany na magistralę CAN celem zebrania danych pomiarowych wielkości odpowiadających identyfikatorowi. W stanie nieaktywnym, nie będą zbierane dane pomiarowe tego identyfikatora.
-		
+		Interfejs użytkownika pozwala na zmianę stanu danego identyfikatora. Stan aktywny oznacza, że identyfikator będzie cyklicznie wysyłany na magistralę CAN celem zebrania danych pomiarowych wielkości odpowiadających identyfikatorowi. W stanie nieaktywnym, nie będą zbierane dane pomiarowe tego identyfikatora.\\		
+		W projekcie, po stronie serwera, wykorzystano dwa serwisy pomocnicze - Prometheus i Grafana.
 		
 		\subsubsection{Prometheus}
+		Prometheus jest zestawem narzędzi służącym do monitorowania aplikacji, powstałym w 2012 roku w firmie SoundCloud. Jego głównym zadaniem jest zbieranie i składowanie różnego rodzaju metryk. W uproszczeniu, metryka to para klucz - wartość wraz ze znakiem czasowym (timestamp). W przypadku tego projektu, taką metryką jest para PID - wartość, zarejestrowana w danym czasie. Użycie tego pakietu pozwoliło pominąć implementację bazy danych dla wyników pomiarów, co za pewne byłoby dużo mniej efektywne od wbudowanej w pakiet. Ponadto, ten zestaw narzędziowy doskonale współpracuje z Grafaną, dla której jest domyślnym konfigurowalnym źródłem danych.\\
+		Prometheus, co 500 ms pobiera zapisane w pamięci aplikacji Server metryki i kolekcjonuje je w swojej bazie danych. Dodanie do projektu jego obsługi, sprowadza się do zainstalowania pakietu NuGet i odpowiedniej, kilkulinijkowej konfiguracji w kodzie źródłowym.
+		
 		\subsubsection{Grafana}
-	\section{Praca zespołowa}
-	\section{Podsumowanie}
+		Wizualizacja danych pomiarowych zrealizowana została przy pomocy systemu wspomagającego Grafana. Jest to system szeroko używany w aplikacjach sieciowych, służący do obrazowania danych uszeregowanych czasowo. Użytkownik końcowy ma możliwość wglądu zarówno w chwilowe wartości danych diagnostycznych, jak i przeglądanie ich w wymiarze czasowym, w postaci wykresów. Interfejs umożliwia operacje związane z analizą danych (np. obliczanie średniej lub maksymalnej wartości w czasie) a także operacje graficzne, m.in. powiększanie wykresu, czy wybór przedziału czasowego analizy danych. Źródłem danych jest Prometheus, odpytywany periodycznie co 500 ms.
+		
+		\subsubsection{Hosting}
+		Każdy z wymienionych komponentów, tj. Client, Server, Grafana i Prometheus jest hostowany jako grupa kontenerów Docker w chmurze Azure. Ponieważ kontenery w grupie działają w jednej podsieci, niezwykle łatwo nawiązać między nimi łączność. Ponadto deployment całej grupy kontenrów jest bardzo prosty, sprowadza się do wykonania kilku poleceń w linii komend Azure (Azure CLI). Warto zauważyć, że aplikacja kliencka, jako statycznie kompilowana strona www, nie może być bezpośrednio hostowana z systemu Docker - dlatego dodatkowo wbudowano w kontener serwer Nginx w trybie reverse - proxy. Z uwagi na ograniczoną ilość środków do wykorzystania na platformie Azure przy subskrypcji studenckiej, nie zaimplementowano statycznego adresu IP, w związku z czym po każdym deploymencie adres ten jest inny. Rozwiązaniem tego problemu w środowisku produkcyjnym byłoby zastosowanie Azure Gateway, czyli bramy stojącej przed całą grupą kontenerów i odpowiednio przekierowującej ruch, a także zapewniającej pożądany, statyczny adres IP.
+		
+		\section{Praca zespołowa}
+		Niemożność znalezienia zespołu projektowego spowodowała, że zadanie zostało wykonane samodzielnie. Z uwagi jednak na cel przedmiotu, prace projektowe prowadzone jendak były tak, aby łatwo dały zaadaptować się do większej liczby uczestników projektu.
+		
+		\subsection{Metodologia}
+		Jako metodologię pracy przyjęto model Agile/Scrum. Okres pracy projektowej został podzielony na tygodniowe sprinty. Zadania zostały rozpisane na początku pracy (backlog) oraz został stworzony harmonogram. 
+		W rzeczywistym projekcie zespołowym, miałby zastosowanie pełen ceremoniał Scrum, tzn:
+		\begin{itemize}
+			\item codzienne, krótkie spotkania zespołowe organizujące pracę (maksymalnie 15 minutowy stand-up)
+			\item po zakończeniu każdego sprintu demonstracja jego osiągnięć (czyli np. prezentacja działającego oprogramowania lub jego części)
+			\item również po zakończeniu sprintu spotkanie retrospektywne (co poszło dobrze, co gorzej, jak możemy to poprawić)
+			\item analiza zadań, tak aby każdy członek zespołu miał wiedzę potrzebną do ich wykonania (backlog refinement)
+		\end{itemize}
+		
+		\subsection{Narzędzia}
+		Do prowadzenia projektu wykorzystano oprogramowanie Jira. Zadanie projektowe zostało podzielone na Epiki, ukończenie każdego Epiku oznaczało dostarczenie w całości pewnego etapu prac. Każdy z epików dzielony był na user-story, czyli mniejsze zadania, mogące zostać ukończone w kilka do kilkunastu godzin. Poniższy diagram ilustruje ten podział, wraz harmonogramem prac, które jeszcze nie zostały ukończone w danym momencie. Pod nim widoczna jest przykładowa tablica zadań w pojedynczym sprincie, z pokazanym podziałem na zadania w toku, ukończone i nierozpoczęte. Na końcu uwidocznione jest pojedyncze user - story.
+				
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.9\linewidth]{harmonogram}
+			\caption[Harmonogram projektu]{Harmonogram projektu - podział na epiki i user - story}
+			\label{fig:harmonogram}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.9\linewidth]{sprint}
+			\caption[Widok tablicy zadań]{Widok tablicy zadań w sprincie}
+			\label{fig:sprint}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\linewidth]{user_story}
+			\caption[User story]{User story}
+			\label{fig:userstory}
+		\end{figure}
+		
+		\subsection{Podział zadań w zespole}
+		W obranej metodologii pracy oraz dzięki spotkaniom backlog - refinement, każdy członek zespołu powinien być w stanie pracować nad dowolnym user-story widocznym w danym sprincie. Możliwy byłby jednakże również inny podział pracy, np. praca równoległa w dwóch strumieniach - część zespołu zajmuje się stroną sprzętową, druga część - stroną sieciową. W takim przypadku konieczne byłyby spotkania synchronizacyjne, a przede wszystkim odpowiednio wczesne ustalenie kontraktów - interfejsów na granicach domen, którymi zajmowałyby się poszczególne części zespołu.
+		
+		\section{Podsumowanie}
+		\subsection{Efekt prac}
+		Efektem prac nad projektem jest powstanie działającego, prototypowego systemu telemetrii samochodowej. Założenia projektowe zostały osiągnięte, działanie zostało przetestowane nie tylko symulacyjnie, ale także w rzeczywistym pojeździe samochodowym. Podczas pracy zapoznano się z nowymi zagadnieniami- przede wszystkim obsługą kontrolera ESP8266, magistrali CAN, czy protokołu OBD. Niezwykle fascynującym procesem było zaprojektowanie oraz własna produkcja płytki PCB stabilizatora napięcia. Także ze strony sieciowej poruszono ciekawe tematy, jak współpraca systemów Prometheus, Grafana z REST API i aplikacją kliencką w kontenerach Docker na platformie Azure. Najwięcej wysiłku pochłonęło pierwsze uruchomienie ESP8266 wraz z MCP2515 i zmuszenie ich do współpracy - okazało się, że winien był nieprawidłowy montaż, przez co obydwa moduły nie miały wspólnej masy, co prowadziło do zupełnie losowych wyników prób ich uruchomienia.
+		
+		\subsection{Możliwości rozwoju}
+		Jak już wielokrotnie wspomniano, jest to układ prototypowy, nie nadający się do zastosowania w środowisku produkcyjnym. Uproszczono wiele procesów, m.in. cała komunikacja odbywa się otwartym protokołem HTTP, zamiast HTTPS, brak jest również jakiejkolwiek autentykacji użytkownika na poziomie interfejsu graficznego klienta, czy podczas wymiany danych między stroną sprzętową a serwerem.\\
+		Niemniej jednak, po wyeliminowaniu tych nieprawidłowości, można pokusić się o próby dalszego rozwoju. Przede wszystkim należałoby się skupić na zaprojektowaniu gotowego, zminiaturyzowanego układu, mieszczącego się na jednym PCB, umieszczonym w rozsądnych wymiarów obudowie.
+		
+		\subsection{Zastosowanie biznesowe}
+		Zagadnienie telemetrii jest obecne coraz częściej w naszym życiu. Ilość pojazdów samochodowych zwiększa się rokrocznie, a zbieranie danych diagnostycznych z ich dużej liczby, może dostarczyć ciekawych danych producentom, warsztatom serwisowym, czy właścicielom flot. Koszty prototypu są stosunkowo niskie z powodu wykorzystanych popularnych komponentów, a przy zastosowaniu masowej produkcji stałyby się zapewne jeszcze dużo mniejsze.
+		
 \end{document}
