@@ -13,7 +13,7 @@
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
 \restylefloat{table}
 \author{Konrad Maciałek}
-\title{Telemetria pojazdów mechanicznych}
+\title{Telemetria pojazdów samochodowych}
 \subtitle{Projekt Zespołowy}
 \lstset{
 	string=[s]{"}{"},
@@ -194,6 +194,7 @@
 				Testy układu wykonane multimetrem uniwersalnym pokazały, że po podłączeniu źródła napięcia w postaci akumulatora samochodowego, zarówno z obciążeniem modułami jak i bez niego, układ stabilizatora utrzymuje stałe napięcie bliskie +5V. Układ zatem zadziałał prawidłowo i mógł zostać wykorzystany w projekcie.
 		\subsection{Kabel OBD-II}
 		Do działania układu niezbędne było wykonanie kabla pozwalającego dostarczyć napięcie oraz sygnały CANH i CANL z gniazda OBD. Kabel wykonano z czterożyłowego przewodu, zakończonego wtykiem męskim OBD. Na zdjęciu widoczne przewody: 
+			
 		
 		\begin{figure}[H]
 			\centering
@@ -217,8 +218,16 @@
 				niebieski &14 & CAN Low \\			
 				\hline
 			\end{tabular}
-		\end{table}
-	
+		\end{table} 	
+		W zmontowanym układzie widoczne są wszystkie wyżej wspomniane elementy: mikrokontroler NodeMCU, interfejs MCP2515, stabilizator napięcia oraz kabel z wtykiem OBD
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\linewidth]{zmontowany_układ}
+			\caption[Zmontowany układ]{Zmontowany układ}
+			\label{fig:zmontowanyukad}
+		\end{figure}
+		
+		
 	
 	\section{Implementacja programowa}
 	Programowo, rozwiązanie możemy podzielić na dwie grupy:
