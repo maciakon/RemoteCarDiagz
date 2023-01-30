@@ -1,8 +1,11 @@
 version: "3.9"
 
+networks:
+  default:
+    name: cardiagzdefaultnetwork
 services:
   server:
-    image: vagacr.azurecr.io/vag-server
+    image: 088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-server
     build:
       context: .
       dockerfile: Server/Dockerfile
@@ -12,9 +15,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-server
 
   prometheus:
-    image: vagacr.azurecr.io/vag-prometheus
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-prometheus
     build: ./Server/Prometheus
     ports:
       - "9090:9090"
@@ -24,9 +31,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-prometheus
   
   grafana:
-    image: vagacr.azurecr.io/vag-grafana
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-grafana
     build: ./Server/Grafana
     ports:
       - "3000:3000"
@@ -36,9 +47,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-grafana
 
   client:
-    image: vagacr.azurecr.io/vag-front
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-front
     build:
       context: .
       dockerfile: Client/Dockerfile
@@ -50,3 +65,23 @@ services:
       resources:
         limits:
           cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-client
+
+  mqttbroker:
+    image: 088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-mttbroker
+    build:
+      context: .
+      dockerfile: MqttBroker/Dockerfile
+    ports:
+      - "1883:1883"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-mqttbroker

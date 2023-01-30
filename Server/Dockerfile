@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim as base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-bullseye-slim as base
 WORKDIR /app
 EXPOSE 5001
 ENV ASPNETCORE_URLS=http://*:5001
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 as build
 WORKDIR /src
 COPY Shared Shared
 COPY Server Server
