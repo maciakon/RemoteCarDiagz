@@ -6,9 +6,17 @@ namespace RemoteCarDiagz.MqttBroker.Mqtt
 {
     public class MqttController : IMqttController
     {
+        private readonly ILogger<MqttController> _logger;
+
+        public MqttController(ILogger<MqttController> logger)
+        {
+            _logger = logger;
+        }
+
         public Task InterceptPublishAsync(InterceptingPublishEventArgs arg)
         {
             var json = JsonSerializer.Deserialize<dynamic>(arg.ApplicationMessage.Payload);
+            _logger.LogInformation($"Client {json} intercepting publish.");
             Console.WriteLine($"Client {json} intercepting publish.");
             return Task.CompletedTask;
         }

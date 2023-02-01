@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MQTTnet.Client;
+using MQTTnet.Extensions.ManagedClient;
 using RemoteCarDiagz.Server.Data;
+using RemoteCarDiagz.Server.Mqtt;
 using RemoteCarDiagz.Shared.Domain;
 using RemoteCarDiagz.Shared.Requests;
 
@@ -20,11 +23,21 @@ namespace RemoteCarDiagz.Server.Services
     {
         private readonly ILogger<ConfigurationService> _logger;
         private readonly RemoteCarDiagzContext _dbContext;
+        private readonly IConfigurationMqttClient _configurationMqttClient;
 
-        public ConfigurationService(RemoteCarDiagzContext dbContext, ILogger<ConfigurationService> logger)
+        public ConfigurationService(RemoteCarDiagzContext dbContext, IConfigurationMqttClient configurationMqttClient, ILogger<ConfigurationService> logger)
         {
             _dbContext = dbContext;
+            _configurationMqttClient = configurationMqttClient;
             _logger = logger;
+
+            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
+                                        .WithClientId("behroozbc")
+                                        .WithTcpServer("localhost");
+            ManagedMqttClientOptions options = new ManagedMqttClientOptionsBuilder()
+                                    .WithAutoReconnectDelay(TimeSpan.FromSeconds(60))
+                                    .WithClientOptions(builder.Build())
+                                    .Build();
         }
 
         public async Task<List<Measurement>> GetAvailableMeasurements()
@@ -44,8 +57,14 @@ namespace RemoteCarDiagz.Server.Services
         {
             _logger.LogInformation($"Toggle measurement: {toggleActivationRequest.Pid}, active: {toggleActivationRequest.IsActive}");
 
+            await _configurationMqttClient.PublishMeasurementMessage(new Measurement { IsActive = toggleActivationRequest.IsActive, Value = toggleActivationRequest.Pid });
+            return await SaveMeasurement(toggleActivationRequest);
+        }
+
+        private async Task<bool> SaveMeasurement(ToggleActivateMeasurementRequest toggleActivationRequest)
+        {
             var entry = await _dbContext.Measurements.FirstOrDefaultAsync(x => x.Value == toggleActivationRequest.Pid);
-            if(entry != null)
+            if (entry != null)
             {
                 entry.IsActive = toggleActivationRequest.IsActive;
             }
