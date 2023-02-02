@@ -15,8 +15,9 @@ namespace RemoteCarDiagz.MqttBroker.Mqtt
 
         public Task InterceptPublishAsync(InterceptingPublishEventArgs arg)
         {
+            var topic = arg.ApplicationMessage.Topic;
             var json = JsonSerializer.Deserialize<dynamic>(arg.ApplicationMessage.Payload);
-            _logger.LogInformation($"Client {json} intercepting publish.");
+            _logger.LogInformation($"Client {json} intercepting publish on topic: {topic}.");
             Console.WriteLine($"Client {json} intercepting publish.");
             return Task.CompletedTask;
         }
