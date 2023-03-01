@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Extensions.ManagedClient;
 using RemoteCarDiagz.Server.Data;
@@ -26,15 +27,18 @@ namespace RemoteCarDiagz.Server
                 .ConfigureServices(
                     (_, services) => 
                     services
+                    
                     .AddScoped<IMeasurementService, MeasurementService>()
                     .AddScoped<IConfigurationService, ConfigurationService>()
                     .AddSingleton<IConfigurationMqttClient, ConfigurationMqttClient>()
+                    .AddSingleton<IMeasurementsMqttClient, MeasurementsMqttClient>()
                     .AddSingleton(provider =>
                     {
 
                         IManagedMqttClient _mqttClient = new MqttFactory().CreateManagedMqttClient();
                         // Create client options object
                         return _mqttClient;
-                    }));
+                    })
+                    .AddHostedService<MqttClientHostedService>());
     }
 }

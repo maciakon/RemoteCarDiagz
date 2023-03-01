@@ -8,9 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteCarDiagz.Client", "Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteCarDiagz.Shared", "Shared\RemoteCarDiagz.Shared.csproj", "{54506C2E-6FAC-432A-A353-B671CE8D9A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTClient", "MQTTClient\MQTTClient.csproj", "{C8538159-6C0B-4C4B-9EED-911BA45A11A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteCarDiagz.MqttBroker", "MqttBroker\RemoteCarDiagz.MqttBroker.csproj", "{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteCarDiagz.MqttBroker", "MqttBroker\RemoteCarDiagz.MqttBroker.csproj", "{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTClient", "MQTTClient\MQTTClient.csproj", "{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,18 +58,6 @@ Global
 		{54506C2E-6FAC-432A-A353-B671CE8D9A68}.Release|x64.Build.0 = Release|Any CPU
 		{54506C2E-6FAC-432A-A353-B671CE8D9A68}.Release|x86.ActiveCfg = Release|Any CPU
 		{54506C2E-6FAC-432A-A353-B671CE8D9A68}.Release|x86.Build.0 = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|x64.Build.0 = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Debug|x86.Build.0 = Debug|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|x64.ActiveCfg = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|x64.Build.0 = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|x86.ActiveCfg = Release|Any CPU
-		{C8538159-6C0B-4C4B-9EED-911BA45A11A7}.Release|x86.Build.0 = Release|Any CPU
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -82,6 +70,18 @@ Global
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Release|x64.Build.0 = Release|Any CPU
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Release|x86.ActiveCfg = Release|Any CPU
 		{953B07DD-5CAE-43C2-B9E0-B5D2A66F299B}.Release|x86.Build.0 = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|x64.Build.0 = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|x64.Build.0 = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D4CDD25-ADC3-4107-9A45-0EFD92AF8624}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
