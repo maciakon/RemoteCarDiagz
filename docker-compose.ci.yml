@@ -1,0 +1,76 @@
+version: "3.9"
+
+networks:
+  default:
+    name: cardiagzdefaultnetwork
+services:
+  server:
+    image: 088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-server
+    ports:
+      - "5001:5001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-server
+
+  prometheus:
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-prometheus
+  
+  grafana:
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-grafana
+
+  client:
+    image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-front
+    ports:
+      - "8080:8080"
+    depends_on:
+    - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-client
+
+  mqttbroker:
+    image: 088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-mttbroker
+    ports:
+      - "1883:1883"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    networks:
+      default:
+        aliases: 
+          - vag-mqttbroker

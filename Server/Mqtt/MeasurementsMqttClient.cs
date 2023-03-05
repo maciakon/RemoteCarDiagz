@@ -14,9 +14,8 @@ namespace RemoteCarDiagz.Server.Mqtt
         private readonly IManagedMqttClient _mqttClient;
         private readonly ILogger<MeasurementsMqttClient> _logger;
         private const string _clientName = nameof(MeasurementsMqttClient);
-        private const string _serverTcpAddress = "18.185.185.121";
-        // private const string _serverTcpAddress = "mqttbroker";
-        // 
+        // private const string _serverTcpAddress = "18.185.185.121";
+        private const string _serverTcpAddress = "mqttbroker";
 
         public MeasurementsMqttClient(IManagedMqttClient mqttClient, ILogger<MeasurementsMqttClient> logger)
         {
@@ -46,6 +45,7 @@ namespace RemoteCarDiagz.Server.Mqtt
             var metric = Metrics.CreateGauge(arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1), arg.ApplicationMessage.Topic);
             var json = JsonSerializer.Deserialize<byte>(arg.ApplicationMessage.Payload);
             metric.Set(json);
+            _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
             return Task.CompletedTask;
         }
 
@@ -57,8 +57,6 @@ namespace RemoteCarDiagz.Server.Mqtt
 
         private Task OnDisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
-
-
             _logger.LogInformation("Client {name} disconnected", _clientName);
             return Task.CompletedTask;
         }
