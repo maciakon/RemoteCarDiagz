@@ -12,9 +12,11 @@ namespace RemoteCarDiagz.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            
-            // var dockerBaseUrl = builder.HostEnvironment.BaseAddress.Replace("8080", "5001");
-            var dockerBaseUrl = "http://server:5001";
+
+            var dockerBaseUrl = builder.HostEnvironment.BaseAddress.Replace("8080", "5001");
+#if DEBUG   
+            dockerBaseUrl = "http://server:5001";
+#endif
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(dockerBaseUrl) });
 
             await builder.Build().RunAsync();
