@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-bullseye-slim as base
 WORKDIR /app
 EXPOSE 80
-ENV ASPNETCORE_URLS=http://*:5001
+ENV ASPNETCORE_URLS=http://*:80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 as build
 WORKDIR /src
