@@ -19,6 +19,10 @@ services:
       default:
         aliases: 
           - vag-server
+    environment:
+      - VIRTUAL_HOST=api.remotecardiagz.pl
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=api.remotecardiagz.pl
 
   prometheus:
     image:  088407122826.dkr.ecr.eu-central-1.amazonaws.com/remotecardiagz/vag-prometheus
