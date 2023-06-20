@@ -49,7 +49,7 @@ namespace RemoteCarDiagz.Server.Mqtt
             using MemoryStream stream = new(arg.ApplicationMessage.Payload);
             var json = await JsonSerializer.DeserializeAsync<byte>(stream);
             metric.Set(1);
-            _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
+            _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metric);
             // var json = JsonSerializer.DeserializeAsync<byte>(arg.ApplicationMessage.Payload);
             // metric.Set(json);
             // _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
