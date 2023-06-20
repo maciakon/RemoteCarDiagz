@@ -4,6 +4,7 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
 using Prometheus;
 using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -40,13 +41,19 @@ namespace RemoteCarDiagz.Server.Mqtt
             return _mqttClient.StartAsync(options);
         }
 
-        private Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+        private async Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
         {
             var metric = Metrics.CreateGauge(arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1), arg.ApplicationMessage.Topic);
-            var json = JsonSerializer.Deserialize<byte>(arg.ApplicationMessage.Payload);
-            metric.Set(json);
+            // var json = JsonSerializer.Deserialize<byte>(arg.ApplicationMessage.Payload);
+
+            using MemoryStream stream = new(arg.ApplicationMessage.Payload);
+            var json = await JsonSerializer.DeserializeAsync<byte>(stream);
+            metric.Set(1);
             _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
-            return Task.CompletedTask;
+            // var json = JsonSerializer.DeserializeAsync<byte>(arg.ApplicationMessage.Payload);
+            // metric.Set(json);
+            // _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
+            // return Task.CompletedTask;
         }
 
         private Task ConnectingFailedAsync(ConnectingFailedEventArgs arg)
