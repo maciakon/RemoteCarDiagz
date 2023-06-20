@@ -43,13 +43,14 @@ namespace RemoteCarDiagz.Server.Mqtt
 
         private async Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
         {
-            var metric = Metrics.CreateGauge(arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1), arg.ApplicationMessage.Topic);
+            var metricName = arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1);
+            var metric = Metrics.CreateGauge(metricName, arg.ApplicationMessage.Topic);
             // var json = JsonSerializer.Deserialize<byte>(arg.ApplicationMessage.Payload);
 
             using MemoryStream stream = new(arg.ApplicationMessage.Payload);
             var json = await JsonSerializer.DeserializeAsync<byte>(stream);
             metric.Set(1);
-            _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metric);
+            _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metricName);
             // var json = JsonSerializer.DeserializeAsync<byte>(arg.ApplicationMessage.Payload);
             // metric.Set(json);
             // _logger.LogInformation("Message received: {0}, value: {1}", arg.ApplicationMessage.Topic, json);
