@@ -1,26 +1,27 @@
 ﻿using Microsoft.Extensions.Logging;
-using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
-using Prometheus;
-using System;
-using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
+using System;
+using MQTTnet;
+using System.Text.Json;
+using RemoteCarDiagz.Server.Services;
+using RemoteCarDiagz.Shared.Mqtt;
 
 namespace RemoteCarDiagz.Server.Mqtt
 {
-    public class MeasurementsMqttClient : IMeasurementsMqttClient
+    public class InitialConfigurationPublisherMqttClient : IInitialConfigurationPublisherMqttClient
     {
         private readonly IManagedMqttClient _mqttClient;
+        private readonly IConfigurationService _configurationService;
         private readonly ILogger<MeasurementsMqttClient> _logger;
-        private const string _clientName = nameof(MeasurementsMqttClient);
-        // private const string _serverTcpAddress = "18.185.185.121";
+        private const string _clientName = nameof(InitialConfigurationPublisherMqttClient);
         private const string _serverTcpAddress = "mqttbroker";
 
-        public MeasurementsMqttClient(IManagedMqttClient mqttClient, ILogger<MeasurementsMqttClient> logger)
+        public InitialConfigurationPublisherMqttClient(IManagedMqttClient mqttClient, IConfigurationService configurationService, ILogger<MeasurementsMqttClient> logger)
         {
             _mqttClient = mqttClient;
+            _configurationService = configurationService;
             _logger = logger;
         }
 
@@ -41,36 +42,34 @@ namespace RemoteCarDiagz.Server.Mqtt
             return _mqttClient.StartAsync(options);
         }
 
-        private async Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+        private async Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
         {
-            var metricName = arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1);
-            var metric = Metrics.CreateGauge(metricName, arg.ApplicationMessage.Topic);
-            using MemoryStream stream = new(arg.ApplicationMessage.Payload);
-            var json = await JsonSerializer.DeserializeAsync<byte>(stream);
-            metric.Set(1);
-            _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metricName);
+            _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", args.ApplicationMessage.Topic);
+            var configuration = await _configurationService.GetAvailableMeasurements();
+            var serializedMeasurements = JsonSerializer.Serialize(configuration);
+            await _mqttClient.EnqueueAsync(MqttTopic.InitialConfigurationTopic, serializedMeasurements);
         }
 
-        private Task ConnectingFailedAsync(ConnectingFailedEventArgs arg)
+        private Task ConnectingFailedAsync(ConnectingFailedEventArgs args)
         {
-            _logger.LogError("Client {name} connection failure because of {reasonString}", _clientName, arg.ConnectResult.ReasonString);
+            _logger.LogError("Client {name} connection failure because of {reasonString}", _clientName, args.ConnectResult.ReasonString);
             return Task.CompletedTask;
         }
 
-        private Task OnDisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+        private Task OnDisconnectedAsync(MqttClientDisconnectedEventArgs args)
         {
             _logger.LogInformation("Client {name} disconnected", _clientName);
             return Task.CompletedTask;
         }
 
-        private Task OnConnectedAsync(MqttClientConnectedEventArgs arg)
+        private Task OnConnectedAsync(MqttClientConnectedEventArgs args)
         {
             _logger.LogInformation("Client {name} connected", _clientName);
             var mqttSubscribeOptions = new MqttFactory().CreateSubscribeOptionsBuilder()
                .WithTopicFilter(
                    f =>
                    {
-                       f.WithTopic("remotecardiagz/pids/#");
+                       f.WithTopic(MqttTopic.DeviceReadyTopic);
                    })
                .Build();
 
