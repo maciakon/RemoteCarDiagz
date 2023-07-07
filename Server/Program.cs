@@ -32,7 +32,7 @@ namespace RemoteCarDiagz.Server
                     .AddSingleton<IConfigurationMqttClient, ConfigurationMqttClient>()
                     .AddSingleton<IMeasurementsMqttClient, MeasurementsMqttClient>()
                     .AddSingleton<IInitialConfigurationPublisherMqttClient, InitialConfigurationPublisherMqttClient>()
-                    .AddSingleton(provider =>
+                    .AddTransient(provider =>
                     {
 
                         IManagedMqttClient _mqttClient = new MqttFactory().CreateManagedMqttClient();
