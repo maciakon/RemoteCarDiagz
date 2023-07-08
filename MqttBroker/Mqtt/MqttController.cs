@@ -13,12 +13,24 @@ namespace RemoteCarDiagz.MqttBroker.Mqtt
             _logger = logger;
         }
 
+        public Task InterceptingInboundPacketAsync(InterceptingPacketEventArgs args)
+        {
+            Console.WriteLine($"InterceptingInboundPacket with client id: {0}", args.ClientId.ToString());
+            return Task.CompletedTask;
+        }
+
         public Task InterceptPublishAsync(InterceptingPublishEventArgs arg)
         {
             var topic = arg.ApplicationMessage.Topic;
             var json = JsonSerializer.Deserialize<dynamic>(arg.ApplicationMessage.Payload);
             _logger.LogInformation($"Client {json} intercepting publish on topic: {topic}.");
             Console.WriteLine($"Client {json} intercepting publish.");
+            return Task.CompletedTask;
+        }
+
+        public Task InterceptSubscriptionAsync(InterceptingSubscriptionEventArgs args)
+        {
+            Console.WriteLine($"InterceptSubscriptionAsync with client id: {0}", args.TopicFilter.ToString());
             return Task.CompletedTask;
         }
 

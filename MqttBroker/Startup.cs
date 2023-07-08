@@ -24,6 +24,8 @@ namespace RemoteCarDiagz.MqttBroker
                      * Attach event handlers etc. if required.
                      */
                     server.InterceptingPublishAsync += controller.InterceptPublishAsync;
+                    server.InterceptingSubscriptionAsync += controller.InterceptSubscriptionAsync;
+                    server.InterceptingInboundPacketAsync += controller.InterceptingInboundPacketAsync;
                     server.ValidatingConnectionAsync += controller.ValidateConnection;
                     server.ClientConnectedAsync += controller.OnClientConnected;
                 });
