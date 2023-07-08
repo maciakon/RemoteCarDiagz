@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MQTTnet.Client;
-using MQTTnet.Extensions.ManagedClient;
 using RemoteCarDiagz.Server.Data;
 using RemoteCarDiagz.Server.Mqtt;
 using RemoteCarDiagz.Shared.Domain;
@@ -22,29 +20,22 @@ namespace RemoteCarDiagz.Server.Services
     public class ConfigurationService : IConfigurationService
     {
         private readonly ILogger<ConfigurationService> _logger;
-        private readonly RemoteCarDiagzContext _dbContext;
+        private readonly IDbContextFactory<RemoteCarDiagzContext> _dbContextFactory;
         private readonly IConfigurationMqttClient _configurationMqttClient;
 
-        public ConfigurationService(RemoteCarDiagzContext dbContext, IConfigurationMqttClient configurationMqttClient, ILogger<ConfigurationService> logger)
+        public ConfigurationService(IDbContextFactory<RemoteCarDiagzContext> dbContextFactory, IConfigurationMqttClient configurationMqttClient, ILogger<ConfigurationService> logger)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
             _configurationMqttClient = configurationMqttClient;
             _logger = logger;
-
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
-                                        .WithClientId("behroozbc")
-                                        .WithTcpServer("localhost");
-            ManagedMqttClientOptions options = new ManagedMqttClientOptionsBuilder()
-                                    .WithAutoReconnectDelay(TimeSpan.FromSeconds(60))
-                                    .WithClientOptions(builder.Build())
-                                    .Build();
         }
 
         public async Task<List<Measurement>> GetAvailableMeasurements()
         {
             try
             {
-                return await _dbContext.Measurements.Where(x => x.IsAvailable).ToListAsync();
+                using var dbContext = _dbContextFactory.CreateDbContext();
+                return await dbContext.Measurements.Where(x => x.IsAvailable).ToListAsync();
             }
             catch (Exception e)
             {
@@ -63,12 +54,13 @@ namespace RemoteCarDiagz.Server.Services
 
         private async Task<bool> SaveMeasurement(ToggleActivateMeasurementRequest toggleActivationRequest)
         {
-            var entry = await _dbContext.Measurements.FirstOrDefaultAsync(x => x.Value == toggleActivationRequest.Pid);
+            using var dbContext = _dbContextFactory.CreateDbContext();
+            var entry = await dbContext.Measurements.FirstOrDefaultAsync(x => x.Value == toggleActivationRequest.Pid);
             if (entry != null)
             {
                 entry.IsActive = toggleActivationRequest.IsActive;
             }
-            return await _dbContext.SaveChangesAsync() > 0;
+            return await dbContext.SaveChangesAsync() > 0;
         }
     }
 }
