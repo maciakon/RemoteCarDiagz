@@ -14,9 +14,14 @@ namespace RemoteCarDiagz.Server.Mqtt
     {
         private readonly IManagedMqttClient _mqttClient;
         private readonly ILogger<MeasurementsMqttClient> _logger;
-        private const string _clientName = nameof(MeasurementsMqttClient);
-        // private const string _serverTcpAddress = "18.185.185.121";
+        
+#if DEBUG
+        private const string _serverTcpAddress = "18.185.185.121";
+        private const string _clientName = "MeasurementsClient";
+#else
         private const string _serverTcpAddress = "mqttbroker";
+        private const string _clientName = nameof(MeasurementsMqttClient);
+#endif
 
         public MeasurementsMqttClient(IManagedMqttClient mqttClient, ILogger<MeasurementsMqttClient> logger)
         {

@@ -15,9 +15,14 @@ namespace RemoteCarDiagz.Server.Mqtt
         private readonly IManagedMqttClient _mqttClient;
         private readonly IConfigurationService _configurationService;
         private readonly ILogger<MeasurementsMqttClient> _logger;
-        private const string _clientName = nameof(InitialConfigurationPublisherMqttClient);
-        private const string _serverTcpAddress = "mqttbroker";
 
+#if DEBUG
+        private const string _serverTcpAddress = "18.185.185.121";
+        private const string _clientName = "InitialConfigClient";
+#else
+        private const string _serverTcpAddress = "mqttbroker";
+        private const string _clientName = "nameof(InitialConfigurationPublisherMqttClient)";
+#endif
         public InitialConfigurationPublisherMqttClient(IManagedMqttClient mqttClient, IConfigurationService configurationService, ILogger<MeasurementsMqttClient> logger)
         {
             _mqttClient = mqttClient;
@@ -73,7 +78,7 @@ namespace RemoteCarDiagz.Server.Mqtt
                    })
                .Build();
 
-            return _mqttClient.SubscribeAsync(mqttSubscribeOptions.TopicFilters);
+            return _mqttClient.SubscribeAsync("remotecardiagz/deviceready");
         }
     }
 }
