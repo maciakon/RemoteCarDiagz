@@ -15,7 +15,7 @@ namespace RemoteCarDiagz.MqttBroker.Mqtt
 
         public Task InterceptingInboundPacketAsync(InterceptingPacketEventArgs args)
         {
-            Console.WriteLine($"InterceptingInboundPacket with client id: {0}", args.ClientId.ToString());
+            Console.WriteLine($"InterceptingInboundPacket with client id: {args.ClientId} ");
             return Task.CompletedTask;
         }
 
@@ -30,7 +30,7 @@ namespace RemoteCarDiagz.MqttBroker.Mqtt
 
         public Task InterceptSubscriptionAsync(InterceptingSubscriptionEventArgs args)
         {
-            Console.WriteLine($"InterceptSubscriptionAsync with client id: {0}", args.TopicFilter.ToString());
+            Console.WriteLine($"InterceptSubscriptionAsync with client id: {args.TopicFilter.Topic}");
             return Task.CompletedTask;
         }
 
