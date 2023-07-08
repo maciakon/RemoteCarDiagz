@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 using RemoteCarDiagz.Server.Data;
+using System;
 
 namespace RemoteCarDiagz.Server
 {
@@ -21,6 +23,9 @@ namespace RemoteCarDiagz.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            var dbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}remotecardiagz.db";
             services.AddCors(options => options.AddDefaultPolicy(
                 builder => 
                             builder
@@ -28,7 +33,7 @@ namespace RemoteCarDiagz.Server
                             .AllowAnyMethod()
                             .AllowAnyOrigin()));
 
-            services.AddDbContext<RemoteCarDiagzContext>();
+            services.AddDbContextFactory<RemoteCarDiagzContext>(options => options.UseSqlite($"Data Source={dbPath}"));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
