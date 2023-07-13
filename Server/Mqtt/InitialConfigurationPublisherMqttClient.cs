@@ -49,10 +49,8 @@ namespace RemoteCarDiagz.Server.Mqtt
 
         private async Task ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
         {
-            // _logger.LogInformation("Message received with topic: {messageTopic}", args.ApplicationMessage.Topic);
-            var configuration = await _configurationService.GetAvailableMeasurements();
+           var configuration = await _configurationService.GetAvailableMeasurements();
             var serializedMeasurements = JsonSerializer.Serialize(configuration);
-            // _logger.LogInformation("Sending serialized measurements {serializedMeasurements}", serializedMeasurements);
             await _mqttClient.EnqueueAsync(MqttTopic.InitialConfigurationTopic, serializedMeasurements);
         }
 
