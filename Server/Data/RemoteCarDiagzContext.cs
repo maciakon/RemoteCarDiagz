@@ -15,6 +15,9 @@ namespace RemoteCarDiagz.Server.Data
         }
 
         public DbSet<Measurement> Measurements { get; set; }
+
+        public DbSet<ProvisioningConfiguration> GrafanaConfig { get; set; }
+
         public string DbPath { get; private set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -1,0 +1,25 @@
+﻿@page "/provisioning"
+@using System.Collections.Generic
+@using RemoteCarDiagz.Shared.Domain
+@using RemoteCarDiagz.Shared.Requests
+@inherits ProvisioningComponentBase
+@inject HttpClient Http
+
+<h1>Provisioning</h1>
+
+<p>Enter provisioning values</p>
+
+@if (configuration == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model=@configuration OnSubmit="@HandleSubmit">
+        <div class="form-group">
+            <label for="@configuration.PublicDashboardUid">Public Grafana dashboard UID</label>
+            <input type="text" class="form-control" id="publicDashBoardUidInput" placeholder="UID" @bind=@configuration.PublicDashboardUid>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+}

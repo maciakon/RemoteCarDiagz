@@ -16,7 +16,7 @@ namespace RemoteCarDiagz.Client
             // var dockerBaseUrl = builder.HostEnvironment.BaseAddress.Replace("8080", "5001");
             var dockerBaseUrl = "https://api.remotecardiagz.pl";
 #if DEBUG   
-            dockerBaseUrl = "http://server:5001";
+            dockerBaseUrl = "https://localhost:5001";
 #endif
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(dockerBaseUrl) });
 
