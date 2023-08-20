@@ -1,5 +1,35 @@
 ﻿@page "/"
+@using System.Collections.Generic
+@using RemoteCarDiagz.Shared.Domain
+@using RemoteCarDiagz.Shared.Requests
+@inject HttpClient Http
+@inherits IndexComponentBase
 
-<h1>Remote Car Diagnostics</h1>
-
-To choose PIDs to be retrieved from a car, click Configuration section on the left.
+<h1>Configuration: toggle active measurements</h1>
+<div></div>
+@if (activeMeasurements == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 60%">Name</th>
+                <th style="width: 40%">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var measurement in activeMeasurements)
+            {
+                <tr>
+                    <td>@measurement.Value.GetFriendlyName()</td>
+                    <td>
+                        <button type="button" class="@GetButtonState(measurement.IsActive)" @onclick="() => TogggleMeasurementActive(measurement)">@GetButtonText(measurement.IsActive)</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
