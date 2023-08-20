@@ -25,7 +25,7 @@ else
             @foreach (var measurement in activeMeasurements)
             {
                 <tr>
-                    <td>@measurement.Value</td>
+                    <td>@measurement.Value.GetFriendlyName()</td>
                     <td>
                         <button type="button" class="@GetButtonState(measurement.IsActive)" @onclick="() => TogggleMeasurementActive(measurement)">@GetButtonText(measurement.IsActive)</button>
                     </td>
