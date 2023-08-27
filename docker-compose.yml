@@ -97,3 +97,7 @@ services:
       default:
         aliases: 
           - vag-mqttbroker
+    environment:
+      - VIRTUAL_HOST=mqtt.remotecardiagz.pl
+      - VIRTUAL_PORT=1883
+      - LETSENCRYPT_HOST=mqtt.remotecardiagz.pl
