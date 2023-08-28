@@ -52,7 +52,7 @@ namespace RemoteCarDiagz.Server.Mqtt
             var metric = Metrics.CreateGauge(metricName, arg.ApplicationMessage.Topic);
             using MemoryStream stream = new(arg.ApplicationMessage.Payload);
             var json = await JsonSerializer.DeserializeAsync<byte>(stream);
-            metric.Set(1);
+            metric.Set(json);
             _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metricName);
         }
 
