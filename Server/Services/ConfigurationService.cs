@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Prometheus;
 using RemoteCarDiagz.Server.Data;
 using RemoteCarDiagz.Server.Mqtt;
 using RemoteCarDiagz.Shared.Domain;
@@ -47,7 +48,7 @@ namespace RemoteCarDiagz.Server.Services
         public async Task<bool> ToggleMeasurementActive(ToggleActivateMeasurementRequest toggleActivationRequest)
         {
             _logger.LogInformation($"Toggle measurement: {toggleActivationRequest.Pid}, active: {toggleActivationRequest.IsActive}");
-
+            ResetMetricWhenDeactivated(toggleActivationRequest);
             await _configurationMqttClient.PublishMeasurementMessage(new Measurement { IsActive = toggleActivationRequest.IsActive, Value = toggleActivationRequest.Pid });
             return await SaveMeasurement(toggleActivationRequest);
         }
@@ -61,6 +62,16 @@ namespace RemoteCarDiagz.Server.Services
                 entry.IsActive = toggleActivationRequest.IsActive;
             }
             return await dbContext.SaveChangesAsync() > 0;
+        }
+
+        private void ResetMetricWhenDeactivated(ToggleActivateMeasurementRequest toggleActivationRequest)
+        {
+            if(!toggleActivationRequest.IsActive)
+            {
+                var metricName = toggleActivationRequest.Pid.ToString()["PID_".Length..];
+                var metric = Metrics.CreateGauge(metricName, string.Empty);
+                metric.Set(0);
+            }
         }
     }
 }
