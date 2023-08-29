@@ -70,7 +70,7 @@ namespace RemoteCarDiagz.Server.Services
             {
                 var metricName = toggleActivationRequest.Pid.ToString()["PID_".Length..];
                 var metric = Metrics.CreateGauge(metricName, string.Empty);
-                metric.Set(0);
+                metric.Set(-12345);
             }
         }
     }

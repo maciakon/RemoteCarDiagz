@@ -101,3 +101,13 @@ services:
       - VIRTUAL_HOST=mqtt.remotecardiagz.pl
       - VIRTUAL_PORT=1883
       - LETSENCRYPT_HOST=mqtt.remotecardiagz.pl
+  
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    ports:
+    - '8125:8125'
+    
