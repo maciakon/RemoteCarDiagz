@@ -53,7 +53,9 @@ namespace RemoteCarDiagz.Server.Mqtt
             using MemoryStream stream = new(arg.ApplicationMessage.Payload);
             var json = await JsonSerializer.DeserializeAsync<UInt16>(stream);
             metric.Set(json);
+#if DEBUG
             _logger.LogInformation("Message received: {0}, value: {1}, with metric {2}", arg.ApplicationMessage.Topic, json, metricName);
+#endif
         }
 
         private Task ConnectingFailedAsync(ConnectingFailedEventArgs arg)
