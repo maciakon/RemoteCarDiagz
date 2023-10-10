@@ -12,7 +12,9 @@ namespace RemoteCarDiagz.Server.Migrations
 {
     [DbContext(typeof(RemoteCarDiagzContext))]
     [Migration("20230807181006_configurationtable")]
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     partial class configurationtable
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

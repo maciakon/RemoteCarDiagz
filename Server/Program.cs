@@ -26,8 +26,6 @@ namespace RemoteCarDiagz.Server
                 .ConfigureServices(
                     (_, services) => 
                     services
-                    
-                    .AddTransient<IMeasurementService, MeasurementService>()
                     .AddTransient<IConfigurationService, ConfigurationService>()
                     .AddTransient<IProvisioningService, ProvisioningService>()
                     .AddSingleton<IConfigurationMqttClient, ConfigurationMqttClient>()

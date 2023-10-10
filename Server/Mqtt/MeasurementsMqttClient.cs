@@ -50,7 +50,9 @@ namespace RemoteCarDiagz.Server.Mqtt
         {
             var metricName = arg.ApplicationMessage.Topic.Substring(arg.ApplicationMessage.Topic.LastIndexOf('/') + 1);
             var metric = Metrics.CreateGauge(metricName, arg.ApplicationMessage.Topic);
+#pragma warning disable CS0618 // Type or member is obsolete
             using MemoryStream stream = new(arg.ApplicationMessage.Payload);
+#pragma warning restore CS0618 // Type or member is obsolete
             var json = await JsonSerializer.DeserializeAsync<UInt16>(stream);
             metric.Set(json);
 #if DEBUG

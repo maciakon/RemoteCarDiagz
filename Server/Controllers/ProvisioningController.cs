@@ -24,7 +24,7 @@ namespace RemoteCarDiagz.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SetActiveMeasurement([FromBody] ProvisioningRequest request)
+        public async Task<IActionResult> SetGrafanaConfiguration([FromBody] ProvisioningRequest request)
         {
             await _provisioningService.SetGrafanaConfiguration(request.GrafanaPublicDashBoardUid);
             return Ok();
